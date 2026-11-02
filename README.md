@@ -1,29 +1,53 @@
+![Antigravity speaks RTL](poster.svg)
+
 # vscode-antigravity-rtl
 
 RTL (Persian / Arabic) support for the chat panel of the **Google Antigravity** extension in VS Code.
 
+- Right-to-left text, auto-detected per paragraph
+- [Vazirmatn](https://github.com/rastikerdar/vazirmatn) font for Persian/Arabic glyphs
+- Code blocks stay LTR
+- Auto re-patch after extension updates
+- Linux, macOS, Windows
+
+> [!WARNING]
+> This is a **vibe-coded** project. It patches another extension's code. Use at your own risk — **no warranty, no responsibility** for anything it breaks.
+
 ## Install
 
+Requires Node.js and git.
+
+**Linux / macOS**
+
 ```bash
-git clone https://github.com/njfamirm/vscode-antigravity-rtl.git ~/.local/share/vscode-antigravity-rtl
-~/.local/share/vscode-antigravity-rtl/patch.sh
+curl -fsSL https://raw.githubusercontent.com/njfamirm/vscode-antigravity-rtl/main/install.sh | bash
 ```
 
-Fully restart VS Code. Re-run `patch.sh` after each extension update.
+**Windows (PowerShell)**
 
-## How it works
+```powershell
+irm https://raw.githubusercontent.com/njfamirm/vscode-antigravity-rtl/main/install.ps1 | iex
+```
 
-The chat UI is an iframe served by the `agy` binary (UI embedded, cross-origin), so custom CSS tricks can't reach it. `patch.sh` changes one line in the extension's `extension.js` so the iframe goes through `rtl-proxy.js`, a tiny local proxy that injects `dir="auto"` + `unicode-bidi: plaintext` into the page. Code blocks stay LTR. If the proxy fails, the original URL is used.
+Then fully restart VS Code.
+
+Auto re-patch uses a systemd path unit (Linux), a launchd agent (macOS) or a logon scheduled task (Windows).
 
 ## Uninstall
 
 ```bash
-for d in ~/.vscode/extensions/google.google-antigravity-*/; do cp "$d/extension.js.orig" "$d/extension.js"; done
+bash ~/.local/share/vscode-antigravity-rtl/install.sh --uninstall
 ```
+
+On Windows: `node $env:LOCALAPPDATA\vscode-antigravity-rtl\patch.js --uninstall` and remove the `vscode-antigravity-rtl` scheduled task.
+
+## How it works
+
+The chat UI is an iframe served by the `agy` binary (UI embedded, cross-origin), so custom CSS tricks can't reach it. `patch.js` changes one line in the extension's `extension.js` so the iframe goes through `rtl-proxy.js`, a tiny local proxy that injects `dir="auto"`, `unicode-bidi: plaintext` and the font into the page. If the proxy fails, the original URL is used.
 
 ## DIY with an AI agent
 
-Patch broke after an update, or you're on another OS? Give this prompt to Claude Code (or any coding agent):
+Patch broke after an update? Give this prompt to Claude Code (or any coding agent):
 
 > The chat panel of the Google Antigravity extension in VS Code has no RTL support. Find the extension in `~/.vscode/extensions`, figure out how the chat UI is loaded, and patch it so Persian/Arabic text renders right-to-left (`dir="auto"`, code blocks stay LTR). Keep a backup of anything you change.
 

@@ -5,6 +5,14 @@ const net = require('net');
 
 const INJECT = `
 <style id="agy-rtl">
+  @font-face {
+    font-family: 'AgyVazirmatn';
+    src: url('https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/fonts/webfonts/Vazirmatn%5Bwght%5D.woff2') format('woff2');
+    font-weight: 100 900;
+    font-display: swap;
+    /* Only Arabic-script glyphs; Latin text keeps the original font. */
+    unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F;
+  }
   p, li, h1, h2, h3, h4, h5, h6, blockquote, td, th, textarea, input,
   [contenteditable], .whitespace-pre-wrap {
     unicode-bidi: plaintext;
@@ -15,14 +23,21 @@ const INJECT = `
 <script>
 (function () {
   var SEL = 'p,li,ul,ol,h1,h2,h3,h4,h5,h6,blockquote,td,th,textarea,input,[contenteditable],.whitespace-pre-wrap';
+  function addFont(el) {
+    if (el.dataset.agyFont) return;
+    el.dataset.agyFont = '1';
+    el.style.fontFamily = "'AgyVazirmatn', " + getComputedStyle(el).fontFamily;
+  }
   function fix(root) {
     if (!root.querySelectorAll) return;
+    root.querySelectorAll('textarea,input,[contenteditable]').forEach(addFont);
     if (root.matches && root.matches(SEL) && !root.closest('pre,code')) root.setAttribute('dir', 'auto');
     root.querySelectorAll(SEL).forEach(function (el) {
       if (!el.closest('pre,code') && !el.hasAttribute('dir')) el.setAttribute('dir', 'auto');
     });
   }
   function start() {
+    addFont(document.body);
     fix(document.body);
     new MutationObserver(function (ms) {
       ms.forEach(function (m) { m.addedNodes.forEach(function (n) { if (n.nodeType === 1) fix(n); }); });
