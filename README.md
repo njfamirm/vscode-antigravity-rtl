@@ -1,6 +1,6 @@
 # vscode-antigravity-rtl
 
-RTL (Persian / Arabic / Hebrew) support for the chat panel of the **Google Antigravity** extension in VS Code.
+RTL (Persian / Arabic) support for the chat panel of the **Google Antigravity** extension in VS Code.
 
 ## Install
 
