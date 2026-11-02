@@ -7,6 +7,7 @@ RTL (Persian / Arabic) support for the chat panel of the **Google Antigravity** 
 - Right-to-left text, auto-detected per paragraph
 - [Vazirmatn](https://github.com/rastikerdar/vazirmatn) font for Persian/Arabic glyphs
 - Code blocks stay LTR
+- **Add to Antigravity Chat** in the Explorer / tab right-click menu (VS Code blocks dragging files into the chat)
 - Auto re-patch after extension updates
 - Linux, macOS, Windows
 
