@@ -8,6 +8,7 @@ RTL (Persian / Arabic) support for the chat panel of the **Google Antigravity** 
 - [Vazirmatn](https://github.com/rastikerdar/vazirmatn) font for Persian/Arabic glyphs
 - Code blocks stay LTR
 - **Add to Antigravity Chat** in the Explorer / tab right-click menu (VS Code blocks dragging files into the chat)
+- Plugin support (e.g. [Telegram bot](https://github.com/njfamirm/vscode-antigravity-telegram)): drop a `.js` into `~/.config/vscode-antigravity-rtl/plugins/`, see **Antigravity: Plugins**
 - Auto re-patch after extension updates
 - Linux, macOS, Windows
 

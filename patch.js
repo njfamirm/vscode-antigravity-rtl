@@ -7,16 +7,19 @@ const path = require('path');
 
 const PROXY = path.join(__dirname, 'rtl-proxy.js');
 // Bump when the patch changes, so older patched installs get re-patched from the backup.
-const MARK = 'agyRtlV2';
+const MARK = 'agyRtlV3';
 const OLD = 'a.search=m.toString();return a.toString()}setupFontChangeListener';
 const NEW = `a.search=m.toString();try{return require(${JSON.stringify(PROXY)}).wrap(a.toString())}catch(${MARK}){return a.toString()}}setupFontChangeListener`;
 // Load the proxy as soon as the extension loads, so the Explorer command exists right away.
 const PRELOAD = `\n;try{require(${JSON.stringify(PROXY)})}catch(${MARK}){}\n`;
 
-const COMMAND = { command: 'antigravityRtl.addToChat', title: 'Add to Antigravity Chat' };
+const COMMANDS = [
+  { command: 'antigravityRtl.addToChat', title: 'Add to Antigravity Chat' },
+  { command: 'antigravityRtl.plugins', title: 'Antigravity: Plugins' },
+];
 const MENUS = {
-  'explorer/context': { command: COMMAND.command, group: 'antigravity@1' },
-  'editor/title/context': { command: COMMAND.command, group: 'antigravity@1' },
+  'explorer/context': { command: 'antigravityRtl.addToChat', group: 'antigravity@1' },
+  'editor/title/context': { command: 'antigravityRtl.addToChat', group: 'antigravity@1' },
 };
 
 const uninstall = process.argv.includes('--uninstall');
@@ -50,7 +53,7 @@ function patchPackageJson(file) {
   const orig = file + '.orig';
   const pkg = JSON.parse(fs.readFileSync(fs.existsSync(orig) ? orig : file, 'utf8'));
   const c = (pkg.contributes = pkg.contributes || {});
-  c.commands = (c.commands || []).concat(COMMAND);
+  c.commands = (c.commands || []).concat(COMMANDS);
   c.menus = c.menus || {};
   for (const [where, item] of Object.entries(MENUS)) c.menus[where] = (c.menus[where] || []).concat(item);
   if (!fs.existsSync(orig)) fs.copyFileSync(file, orig);
